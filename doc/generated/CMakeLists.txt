@@ -28,6 +28,7 @@ project(MyApplication)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/../../modules/")
 
+set(CORRADE_USE_PEDANTIC_CXX ON)
 find_package(Magnum REQUIRED
     MeshTools
     Primitives
@@ -46,22 +47,17 @@ endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CORRADE_CXX_FLAGS}")
-include_directories(${MAGNUM_INCLUDE_DIRS}
-    ${MAGNUM_APPLICATION_INCLUDE_DIRS}
-    ${MAGNUM_WINDOWLESSAPPLICATION_INCLUDE_DIRS})
 
 add_executable(hello hello.cpp)
 target_link_libraries(hello
-    ${MAGNUM_LIBRARIES}
-    ${MAGNUM_APPLICATION_LIBRARIES})
+    Magnum::Magnum
+    Magnum::Application)
 
 add_executable(shaders shaders.cpp)
+target_include_directories(shaders PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(shaders
-    ${MAGNUM_LIBRARIES}
-    ${MAGNUM_MESHTOOLS_LIBRARIES}
-    ${MAGNUM_PRIMITIVES_LIBRARIES}
-    ${MAGNUM_SHADERS_LIBRARIES}
-    ${MAGNUM_WINDOWLESSAPPLICATION_LIBRARIES})
+    Magnum::Magnum
+    Magnum::MeshTools
+    Magnum::Primitives
+    Magnum::Shaders
+    Magnum::WindowlessApplication)
